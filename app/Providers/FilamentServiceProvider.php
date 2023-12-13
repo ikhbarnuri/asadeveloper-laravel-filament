@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Filament\Resources\UserResource;
 use Filament\Facades\Filament;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Support\ServiceProvider;
@@ -25,7 +26,7 @@ class FilamentServiceProvider extends ServiceProvider
             Filament::registerUserMenuItems([
                 UserMenuItem::make()
                     ->label('Settings')
-                    ->url('/')
+                    ->url(UserResource::getUrl())
                     ->icon('heroicon-s-cog')
             ]);
         });
