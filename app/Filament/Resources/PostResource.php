@@ -6,6 +6,7 @@ use App\Filament\Resources\CategoryResource\RelationManagers\PostsRelationManage
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Filament\Resources\PostResource\RelationManagers\TagsRelationManager;
+use App\Filament\Resources\PostResource\Widgets\StatsOverview;
 use App\Models\Post;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
@@ -30,6 +31,8 @@ use stdClass;
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
+
+    protected static ?string $recordTitleAttribute = 'title';
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
@@ -106,6 +109,13 @@ class PostResource extends Resource
             'index' => Pages\ListPosts::route('/'),
             'create' => Pages\CreatePost::route('/create'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            StatsOverview::class,
         ];
     }
 }
