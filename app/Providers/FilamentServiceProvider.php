@@ -25,7 +25,9 @@ class FilamentServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Filament::serving(function () {
-            if (Auth::user()->hasRole('admin')) {
+            Filament::registerViteTheme('resources/css/filament.css');
+
+            if (Auth::check() && Auth::user()->hasRole('admin')) {
                 Filament::registerUserMenuItems([
                     UserMenuItem::make()
                         ->label('Settings')

@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        if ($user->id === $model->id && $user->hasRole('editor')) {
+        if ($user->id === $model->id    ) {
             return true;
         } else {
             return false;
