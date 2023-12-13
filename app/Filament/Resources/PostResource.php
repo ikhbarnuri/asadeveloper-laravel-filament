@@ -44,6 +44,7 @@ class PostResource extends Resource
                         })->required(),
                     TextInput::make('slug')
                         ->required(),
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('cover'),
                     RichEditor::make('content')
                         ->required(),
                     Toggle::make('status')
@@ -67,6 +68,7 @@ class PostResource extends Resource
                 ),
                 TextColumn::make('title')->limit(50)->sortable(),
                 TextColumn::make('category.name'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('cover'),
                 ToggleColumn::make('status')
             ])
             ->filters([
