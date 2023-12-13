@@ -20,6 +20,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
@@ -68,13 +70,20 @@ class PostResource extends Resource
                         );
                     }
                 ),
-                TextColumn::make('title')->limit(50)->sortable(),
+                TextColumn::make('title')
+                    ->limit(50)
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('category.name'),
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('cover'),
                 ToggleColumn::make('status')
             ])
             ->filters([
-                //
+                Filter::make('publish')
+                    ->query(fn(Builder $query): Builder => $query->where('status', true)),
+                Filter::make('draft')
+                    ->query(fn(Builder $query): Builder => $query->where('status', false)),
+                SelectFilter::make('category')->relationship('category', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
