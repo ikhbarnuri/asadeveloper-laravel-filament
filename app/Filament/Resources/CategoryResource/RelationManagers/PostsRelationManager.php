@@ -1,43 +1,50 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\CategoryResource\RelationManagers;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Filament\Resources\CategoryResource\RelationManagers\PostsRelationManager;
-use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use stdClass;
 
-class CategoryResource extends Resource
+class PostsRelationManager extends RelationManager
 {
-    protected static ?string $model = Category::class;
+    protected static string $relationship = 'posts';
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Card::make()->schema([
-                    TextInput::make('name')
+                    Select::make('category_id')
+                        ->relationship('category', 'name')
+                        ->required(),
+                    TextInput::make('title')
                         ->reactive()
                         ->afterStateUpdated(function (\Closure $set, $state) {
                             $set('slug', Str::slug($state));
                         })->required(),
                     TextInput::make('slug')
-                        ->required()
+                        ->required(),
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('cover'),
+                    RichEditor::make('content')
+                        ->required(),
+                    Toggle::make('status')
                 ])
             ]);
     }
@@ -56,33 +63,22 @@ class CategoryResource extends Resource
                         );
                     }
                 ),
-                TextColumn::make('name')->limit(50)->sortable(),
-                TextColumn::make('slug')->limit(50),
-            ])
+                TextColumn::make('title')->limit(50)->sortable(),
+                TextColumn::make('category.name'),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('cover'),
+                ToggleColumn::make('status')])
             ->filters([
                 //
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            PostsRelationManager::class
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
-        ];
     }
 }
