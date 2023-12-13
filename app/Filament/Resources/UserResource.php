@@ -7,6 +7,7 @@ use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Page;
 use Filament\Resources\Form;
@@ -58,7 +59,13 @@ class UserResource extends Resource
                         ->label('Passowrd Confirmation')
                         ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
                         ->minLength(8)
-                        ->dehydrated(false)
+                        ->dehydrated(false),
+
+                    Select::make('roles')
+                        ->multiple()
+                        ->relationship('roles', 'name')
+                        ->preload()
+                        ->required()
                 ])
             ]);
     }
@@ -84,6 +91,10 @@ class UserResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('email')
+                    ->limit('50')
+                    ->searchable(),
+
+                TextColumn::make('roles.name')
                     ->limit('50')
                     ->searchable()
             ])
