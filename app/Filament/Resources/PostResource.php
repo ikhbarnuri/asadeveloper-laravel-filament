@@ -115,6 +115,7 @@ class PostResource extends Resource
             'index' => Pages\ListPosts::route('/'),
             'create' => Pages\CreatePost::route('/create'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
+            'show' => Pages\ShowPost::route('/show/{id}'),
         ];
     }
 
