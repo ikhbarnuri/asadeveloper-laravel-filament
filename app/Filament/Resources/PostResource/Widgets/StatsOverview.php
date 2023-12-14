@@ -10,6 +10,8 @@ class StatsOverview extends BaseWidget
 {
     // protected static string $view = 'filament.resources.post-resource.widgets.stats-overview';
 
+    protected int | string | array $columnSpan = 1;
+
     protected function getCards(): array
     {
         return [

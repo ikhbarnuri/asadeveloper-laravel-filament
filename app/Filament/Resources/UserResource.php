@@ -103,6 +103,8 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('show')
+                    ->url(fn(User $record) => 'users/show/' . $record->id),
                 Tables\Actions\EditAction::make(),
                 Action::make('Download')
                     ->url(fn(User $record) => route('download.user', $record))
@@ -126,6 +128,7 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+            'show' =>  Pages\ShowUser::route('/show/{id}')
         ];
     }
 }

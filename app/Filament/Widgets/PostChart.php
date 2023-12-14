@@ -12,6 +12,8 @@ class PostChart extends LineChartWidget
 {
     protected static ?string $heading = 'Posts Chart';
 
+    protected int|string|array $columnSpan = 1;
+
     protected function getData(): array
     {
         $data = Trend::model(Post::class)
